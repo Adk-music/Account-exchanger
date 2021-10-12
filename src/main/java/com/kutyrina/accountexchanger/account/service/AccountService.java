@@ -36,7 +36,7 @@ public class AccountService {
 
     @Transactional
     public AccountResponse withdrawFromAccount(Long accountId, BigDecimal amount) {
-        Account account = getAccountIfPresent(accountId);
+        Account account = getAccountIfPresentWithLock(accountId);
         BigDecimal balance = account.getBalance();
         BigDecimal newBalance = balance.add(amount);
         if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
@@ -55,35 +55,14 @@ public class AccountService {
         Account accountSecond;
 
         if (accountFrom > accountTo) {
-            accountFirst = getAccountIfPresent(accountFrom);
-            accountSecond = getAccountIfPresent(accountTo);
+            accountFirst = getAccountIfPresentWithLock(accountFrom);
+            accountSecond = getAccountIfPresentWithLock(accountTo);
             return accountsTransferMoney(accountFirst, accountSecond, transferMoneyRequest.getAmount());
         } else {
-            accountFirst = getAccountIfPresent(accountTo);
-            accountSecond = getAccountIfPresent(accountFrom);
+            accountFirst = getAccountIfPresentWithLock(accountTo);
+            accountSecond = getAccountIfPresentWithLock(accountFrom);
             return accountsTransferMoney(accountSecond, accountFirst, transferMoneyRequest.getAmount());
         }
-    }
-
-    private TransferMoneyResponse getTransferMoneyResponse(TransferMoneyRequest transferMoneyRequest) {
-
-        Account accountFrom = getAccountIfPresent(transferMoneyRequest.getAccountFrom());
-        BigDecimal balance = accountFrom.getBalance();
-        if (balance.compareTo(transferMoneyRequest.getAmount()) < 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Account balance less than amount to withdraw");
-        }
-        BigDecimal newBalance = balance.subtract(transferMoneyRequest.getAmount());
-        accountFrom.setBalance(newBalance);
-        accountRepository.save(accountFrom);
-
-        Account accountTo = getAccountIfPresent(transferMoneyRequest.getAccountTo());
-        BigDecimal transferToAccountBalance = accountTo.getBalance();
-        BigDecimal newAccountBalance = transferToAccountBalance.add(transferMoneyRequest.getAmount());
-        accountTo.setBalance(newAccountBalance);
-        accountRepository.save(accountTo);
-        return new TransferMoneyResponse(
-                new AccountResponse(accountFrom.getAccountNumber(), accountFrom.getBalance()),
-                new AccountResponse(accountTo.getAccountNumber(), accountTo.getBalance()));
     }
 
     private TransferMoneyResponse accountsTransferMoney(Account accountFrom, Account accountTo, BigDecimal amount) {
@@ -102,8 +81,8 @@ public class AccountService {
                 new AccountResponse(accountTo.getAccountNumber(), accountTo.getBalance()));
     }
 
-    private Account getAccountIfPresent(Long accountId) {
-        return accountRepository.findByAccountNumber(accountId)
+    private Account getAccountIfPresentWithLock(Long accountId) {
+        return accountRepository.findByAccountNumberWithLock(accountId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found!"));
     }
 
