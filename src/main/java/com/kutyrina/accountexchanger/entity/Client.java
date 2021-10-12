@@ -14,26 +14,27 @@ public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String fullName;
-    private String birthDay;
+    private String login;
+    private String password;
 
     public Long getId() {
         return id;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getLogin() {
+        return login;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
-    public String getBirthDay() {
-        return birthDay;
+    public String getPassword() {
+        return password;
     }
 
-    public void setBirthDay(String birthDay) {
-        this.birthDay = birthDay;
+    public void setPassword(String password) {
+        this.password = password;
     }
+
 }
