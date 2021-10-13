@@ -1,9 +1,7 @@
 package com.kutyrina.accountexchanger.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Работа с клиентом.
@@ -16,6 +14,9 @@ public class Client {
     private Long id;
     private String login;
     private String password;
+
+    @OneToMany(mappedBy = "client")
+    private Set<Account> clientAccounts;
 
     public Long getId() {
         return id;

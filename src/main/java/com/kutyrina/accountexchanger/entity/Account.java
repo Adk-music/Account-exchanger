@@ -1,9 +1,6 @@
 package com.kutyrina.accountexchanger.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 /**
@@ -16,6 +13,10 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountNumber;
     private BigDecimal balance = BigDecimal.ZERO;
+
+    @ManyToOne
+    @JoinColumn(name = "id", nullable = false)
+    private Client client;
 
     public Account() {
 
