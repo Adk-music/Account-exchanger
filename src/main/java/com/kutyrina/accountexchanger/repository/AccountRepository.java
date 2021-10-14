@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface AccountRepository extends CrudRepository<Account, Long> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    Optional<Account> findByAccountNumberWithLock(Long accountNumber);
+    Optional<Account> findByAccountNumber(Long accountNumber);
 
 
 }

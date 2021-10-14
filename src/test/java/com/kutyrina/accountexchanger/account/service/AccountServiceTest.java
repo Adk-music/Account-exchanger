@@ -73,13 +73,13 @@ public class AccountServiceTest {
         accountFrom.setAccountNumber(accountFromId);
         accountFrom.setBalance(new BigDecimal("100"));
 
-        doReturn(Optional.of(accountFrom)).when(accountRepository).findByAccountNumberWithLock(accountFromId);
+        doReturn(Optional.of(accountFrom)).when(accountRepository).findByAccountNumber(accountFromId);
 
         Account accountTo = new Account();
         accountTo.setAccountNumber(accountToId);
         accountTo.setBalance(new BigDecimal("50"));
 
-        doReturn(Optional.of(accountTo)).when(accountRepository).findByAccountNumberWithLock(accountToId);
+        doReturn(Optional.of(accountTo)).when(accountRepository).findByAccountNumber(accountToId);
 
         TransferMoneyRequest transferMoneyRequest = new TransferMoneyRequest();
         transferMoneyRequest.setAccountFrom(accountFromId);
@@ -88,8 +88,8 @@ public class AccountServiceTest {
 
         accountServiceMock.transferMoneyToAnotherUser(transferMoneyRequest);
 
-        verify(accountRepository).findByAccountNumberWithLock(accountFromId);
-        verify(accountRepository).findByAccountNumberWithLock(accountToId);
+        verify(accountRepository).findByAccountNumber(accountFromId);
+        verify(accountRepository).findByAccountNumber(accountToId);
         verify(accountRepository, times(2)).save(any());
     }
 }

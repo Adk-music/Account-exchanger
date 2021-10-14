@@ -1,27 +1,21 @@
-package com.kutyrina.accountexchanger.entity;
+package com.kutyrina.accountexchanger.dto;
 
-import javax.persistence.*;
-import java.util.Set;
+public class ClientResponse {
 
-/**
- * Работа с клиентом.
- */
-@Entity
-public class Client {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(unique = true)
     private String login;
     private String password;
 
-    @OneToMany(mappedBy = "client")
-    private Set<Account> clientAccounts;
 
-    public Long getId() {
-        return id;
+    public ClientResponse(String login, String password) {
+        this.login = login;
+        this.password = password;
+    }
+
+    public ClientResponse(String login) {
+        this.login = login;
+    }
+
+    public ClientResponse() {
     }
 
     public String getLogin() {
@@ -40,9 +34,13 @@ public class Client {
         this.password = password;
     }
 
+    public String getMassage(String massage) {
+        return massage;
+    }
+
     @Override
     public String toString() {
-        return "Client{" +
+        return "ClientResponse{" +
                 "login='" + login + '\'' +
                 '}';
     }

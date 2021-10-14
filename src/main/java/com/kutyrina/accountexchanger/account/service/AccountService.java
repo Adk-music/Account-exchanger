@@ -82,7 +82,7 @@ public class AccountService {
     }
 
     private Account getAccountIfPresentWithLock(Long accountId) {
-        return accountRepository.findByAccountNumberWithLock(accountId)
+        return accountRepository.findByAccountNumber(accountId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found!"));
     }
 
