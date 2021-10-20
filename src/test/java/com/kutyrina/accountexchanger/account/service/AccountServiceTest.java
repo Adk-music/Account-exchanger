@@ -4,6 +4,7 @@ import com.kutyrina.accountexchanger.dto.AccountResponse;
 import com.kutyrina.accountexchanger.dto.TransferMoneyRequest;
 import com.kutyrina.accountexchanger.entity.Account;
 import com.kutyrina.accountexchanger.repository.AccountRepository;
+import com.kutyrina.accountexchanger.service.AccountService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,7 +60,7 @@ public class AccountServiceTest {
         doReturn(Optional.of(account)).when(accountRepository).findById(accountId);
         doReturn(account).when(accountRepository).save(any());
 
-        accountServiceMock.withdrawFromAccount(accountId, new BigDecimal("100"));
+        accountServiceMock.changeAccountBalance(accountId, new BigDecimal("100"));
 
         verify(accountRepository).save(any());
     }
