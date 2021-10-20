@@ -15,7 +15,7 @@ public class Account {
     private BigDecimal balance = BigDecimal.ZERO;
 
     @ManyToOne
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
     public Account() {
@@ -38,4 +38,11 @@ public class Account {
         this.balance = balance;
     }
 
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
 }

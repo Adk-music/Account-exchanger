@@ -1,10 +1,13 @@
-package com.kutyrina.accountexchanger.account.service;
+package com.kutyrina.accountexchanger.service;
 
+import com.kutyrina.accountexchanger.component.SessionHolderComponent;
 import com.kutyrina.accountexchanger.dto.AccountResponse;
 import com.kutyrina.accountexchanger.dto.TransferMoneyRequest;
 import com.kutyrina.accountexchanger.dto.TransferMoneyResponse;
 import com.kutyrina.accountexchanger.entity.Account;
+import com.kutyrina.accountexchanger.entity.Client;
 import com.kutyrina.accountexchanger.repository.AccountRepository;
+import com.kutyrina.accountexchanger.repository.ClientRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,25 +20,35 @@ import java.math.BigDecimal;
 public class AccountService {
 
     private final AccountRepository accountRepository;
+    private final ClientRepository clientRepository;
+    private final SessionHolderComponent sessionHolderComponent;
 
-    public AccountService(AccountRepository accountRepository) {
+    public AccountService(AccountRepository accountRepository, ClientRepository clientRepository, SessionHolderComponent sessionHolderComponent) {
         this.accountRepository = accountRepository;
+        this.clientRepository = clientRepository;
+        this.sessionHolderComponent = sessionHolderComponent;
     }
 
     public AccountResponse getAccounts(Long accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found!"));
+        sessionHolderComponent.validateAccessToAccount(accountId);
         return new AccountResponse(account.getAccountNumber(), account.getBalance());
     }
 
+    @Transactional
     public AccountResponse addNewAccount() {
         Account account = new Account();
+        Client client = clientRepository.findByLogin(sessionHolderComponent.getCurrentUserLogin())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "client not found"));
+        account.setClient(client);
         accountRepository.save(account);
         return new AccountResponse(account.getAccountNumber(), account.getBalance());
     }
 
     @Transactional
-    public AccountResponse withdrawFromAccount(Long accountId, BigDecimal amount) {
+    public AccountResponse changeAccountBalance(Long accountId, BigDecimal amount) {
+        sessionHolderComponent.validateAccessToAccount(accountId);
         Account account = getAccountIfPresentWithLock(accountId);
         BigDecimal balance = account.getBalance();
         BigDecimal newBalance = balance.add(amount);
@@ -49,6 +62,7 @@ public class AccountService {
 
     @Transactional
     public TransferMoneyResponse transferMoneyToAnotherUser(TransferMoneyRequest transferMoneyRequest) {
+        sessionHolderComponent.validateAccessToAccount(transferMoneyRequest.getAccountFrom());
         Long accountFrom = transferMoneyRequest.getAccountFrom();
         Long accountTo = transferMoneyRequest.getAccountTo();
         Account accountFirst;

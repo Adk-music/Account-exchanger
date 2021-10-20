@@ -1,9 +1,9 @@
 package com.kutyrina.accountexchanger.controller;
 
-import com.kutyrina.accountexchanger.account.service.AccountService;
 import com.kutyrina.accountexchanger.dto.AccountResponse;
 import com.kutyrina.accountexchanger.dto.TransferMoneyRequest;
 import com.kutyrina.accountexchanger.dto.TransferMoneyResponse;
+import com.kutyrina.accountexchanger.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +34,7 @@ public class AccountController {
 
     @PatchMapping("account/{accountId}")
     public AccountResponse withdrawFromAccount(@PathVariable Long accountId, @RequestBody BigDecimal amount) {
-        return accountService.withdrawFromAccount(accountId, amount);
+        return accountService.changeAccountBalance(accountId, amount);
     }
 
     @PatchMapping("account/transfer")

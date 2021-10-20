@@ -1,6 +1,7 @@
 package com.kutyrina.accountexchanger.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -17,11 +18,15 @@ public class Client {
     private String login;
     private String password;
 
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
     private Set<Account> clientAccounts;
 
     public Long getId() {
         return id;
+    }
+
+    public Set<Account> getClientAccounts() {
+        return clientAccounts;
     }
 
     public String getLogin() {
@@ -45,5 +50,18 @@ public class Client {
         return "Client{" +
                 "login='" + login + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Client client = (Client) o;
+        return Objects.equals(id, client.id) && Objects.equals(login, client.login) && Objects.equals(password, client.password) && Objects.equals(clientAccounts, client.clientAccounts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, login, password, clientAccounts);
     }
 }
