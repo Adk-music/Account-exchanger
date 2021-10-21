@@ -4,7 +4,7 @@ public class ClientChangePasswordRequest {
 
     private final String newPassword;
 
-    public ClientChangePasswordRequest(String oldPassword, String newPassword) {
+    public ClientChangePasswordRequest(String newPassword) {
 
         this.newPassword = newPassword;
     }

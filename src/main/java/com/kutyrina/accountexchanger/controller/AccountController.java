@@ -33,7 +33,7 @@ public class AccountController {
     }
 
     @PatchMapping("account/{accountId}")
-    public AccountResponse withdrawFromAccount(@PathVariable Long accountId, @RequestBody BigDecimal amount) {
+    public AccountResponse changeAccountBalance(@PathVariable Long accountId, @RequestBody BigDecimal amount) {
         return accountService.changeAccountBalance(accountId, amount);
     }
 

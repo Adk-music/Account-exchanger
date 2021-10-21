@@ -1,5 +1,6 @@
 package com.kutyrina.accountexchanger.account.service;
 
+import com.kutyrina.accountexchanger.component.SessionHolderComponent;
 import com.kutyrina.accountexchanger.dto.AccountResponse;
 import com.kutyrina.accountexchanger.dto.TransferMoneyRequest;
 import com.kutyrina.accountexchanger.entity.Account;
@@ -25,6 +26,8 @@ public class AccountServiceTest {
 
     @Mock
     AccountRepository accountRepository;
+    @Mock
+    SessionHolderComponent sessionHolderComponent;
 
 
     @Test
@@ -33,7 +36,6 @@ public class AccountServiceTest {
         Account account = new Account();
         account.setAccountNumber(accountId);
         doReturn(Optional.of(account)).when(accountRepository).findById(accountId);
-
         AccountResponse accounts = accountServiceMock.getAccounts(accountId);
         Assertions.assertThat(accounts.getId()).isEqualTo(accountId);
 
