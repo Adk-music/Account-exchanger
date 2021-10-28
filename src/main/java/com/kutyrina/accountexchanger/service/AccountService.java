@@ -63,19 +63,21 @@ public class AccountService {
     @Transactional
     public TransferMoneyResponse transferMoneyToAnotherUser(TransferMoneyRequest transferMoneyRequest) {
         sessionHolderComponent.validateAccessToAccount(transferMoneyRequest.getAccountFrom());
-        Long accountFrom = transferMoneyRequest.getAccountFrom();
-        Long accountTo = transferMoneyRequest.getAccountTo();
-        Account accountFirst;
-        Account accountSecond;
+        Long accountFromId = transferMoneyRequest.getAccountFrom();
+        Long accountToId = transferMoneyRequest.getAccountTo();
 
-        if (accountFrom > accountTo) {
-            accountFirst = getAccountIfPresentWithLock(accountFrom);
-            accountSecond = getAccountIfPresentWithLock(accountTo);
-            return accountsTransferMoney(accountFirst, accountSecond, transferMoneyRequest.getAmount());
+        if (accountFromId.equals(accountToId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You cannot transfer money on the same account");
+        }
+
+        if (accountFromId > accountToId) {
+            Account accountFrom = getAccountIfPresentWithLock(accountFromId);
+            Account accountTo = getAccountIfPresentWithLock(accountToId);
+            return accountsTransferMoney(accountFrom, accountTo, transferMoneyRequest.getAmount());
         } else {
-            accountFirst = getAccountIfPresentWithLock(accountTo);
-            accountSecond = getAccountIfPresentWithLock(accountFrom);
-            return accountsTransferMoney(accountSecond, accountFirst, transferMoneyRequest.getAmount());
+            Account accountTo = getAccountIfPresentWithLock(accountToId);
+            Account accountFrom = getAccountIfPresentWithLock(accountFromId);
+            return accountsTransferMoney(accountFrom, accountTo, transferMoneyRequest.getAmount());
         }
     }
 
