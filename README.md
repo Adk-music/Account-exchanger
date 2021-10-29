@@ -25,5 +25,6 @@
    блокирования счета по его номеру.
 3. Была решена проблема доступа пользователя к счету, который ему не пренадлежит, через авторизацию пользователя.
 
-Postman collection:__
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://www.getpostman.com/collections/42d458dd0cd77ac90716)
+Ссылка на коллекцию тестов в Postman:
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collections/42d458dd0cd77ac90716)
