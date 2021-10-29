@@ -27,4 +27,4 @@
 
 Ссылка на коллекцию тестов в Postman:
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collections/42d458dd0cd77ac90716)
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/42d458dd0cd77ac90716)
